@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walter Radio</title>
+<style>
+  :root{
+    --bg: #1b1712;
+    --panel: #241f19;
+    --dial: #e8dcc4;
+    --amber: #d98f2b;
+    --amber-bright: #f2ac45;
+    --text: #f2ead9;
+    --muted: #a89a80;
+    --stop: #b3413a;
+    --stop-bright: #d15248;
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 50% 0%, #2a241c 0%, var(--bg) 60%);
+    font-family: 'Georgia', 'Iowan Old Style', serif;
+    color: var(--text);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 32px 16px 64px;
+  }
+
+  header{
+    text-align:center;
+    margin-bottom: 8px;
+  }
+  .eyebrow{
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.3em;
+    font-size: 0.7rem;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin: 0 0 6px;
+  }
+  h1{
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    margin: 0 0 4px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+  .sub{
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin: 0 0 28px;
+  }
+
+  /* dial / signature element */
+  .dial{
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin: 0 auto 28px;
+    background: var(--muted);
+    box-shadow: 0 0 0 3px rgba(232,220,196,0.08);
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  .dial.live{
+    background: var(--amber-bright);
+    box-shadow: 0 0 0 3px rgba(242,172,69,0.18), 0 0 18px 4px rgba(242,172,69,0.55);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:1; }
+    50%{ opacity:0.55; }
+  }
+
+  .now-playing{
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    color: var(--amber);
+    min-height: 1.2em;
+    margin-bottom: 28px;
+    text-align:center;
+  }
+  .now-playing .off{ color: var(--muted); }
+
+  main{
+    width: 100%;
+    max-width: 640px;
+    background: var(--panel);
+    border: 1px solid rgba(232,220,196,0.08);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+
+  .stations{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 480px){
+    .stations{ grid-template-columns: 1fr; }
+  }
+
+  button.station{
+    all: unset;
+    cursor: pointer;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap: 4px;
+    padding: 18px 16px;
+    min-height: 76px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #2c261d, #221d16);
+    border: 1px solid rgba(232,220,196,0.1);
+    color: var(--text);
+    font-size: 1.02rem;
+    letter-spacing: 0.01em;
+    transition: border-color 0.2s, background 0.2s, transform 0.1s;
+  }
+  button.station .country{
+    font-family: 'Courier New', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  button.station:hover{
+    border-color: var(--amber);
+    background: linear-gradient(180deg, #332b1f, #271f16);
+  }
+  button.station:active{ transform: scale(0.98); }
+  button.station.active{
+    border-color: var(--amber-bright);
+    background: linear-gradient(180deg, #3a2f1c, #2c2415);
+    box-shadow: inset 0 0 0 1px rgba(242,172,69,0.35);
+  }
+
+  .stop-row{
+    border-top: 1px solid rgba(232,220,196,0.08);
+    padding-top: 16px;
+  }
+  button.stop{
+    all: unset;
+    cursor: pointer;
+    display:block;
+    width: 100%;
+    text-align:center;
+    padding: 16px;
+    border-radius: 10px;
+    background: var(--stop);
+    color: #fff2ee;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Courier New', monospace;
+    transition: background 0.2s, transform 0.1s;
+  }
+  button.stop:hover{ background: var(--stop-bright); }
+  button.stop:active{ transform: scale(0.98); }
+
+  footer{
+    margin-top: 24px;
+    color: var(--muted);
+    font-size: 0.75rem;
+    text-align:center;
+    max-width: 500px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">On Air</p>
+  <h1>Walter Radio</h1>
+  <p class="sub">Einen Sender antippen zum Starten</p>
+</header>
+
+<div class="dial" id="dial"></div>
+<div class="now-playing" id="nowPlaying"><span class="off">Kein Sender aktiv</span></div>
+
+<main>
+  <div class="stations" id="stations"></div>
+  <div class="stop-row">
+    <button class="stop" id="stopBtn">■ Stopp</button>
+  </div>
+</main>
+
+<footer>
+  Streams werden direkt von den jeweiligen Sendern geladen. Bei Wiedergabeproblemen kann es an Format, CORS-Einschränkungen oder der Verfügbarkeit des Streams liegen.
+</footer>
+
+<audio id="player" preload="none"></audio>
+
+<script>
+  const stations = [
+    { name: "Radio Recuerdos de Uyuni", country: "Bolivien", url: "https://emiteradio.com/proxy/uyuni2?mp=/stream?n=3f5b38c8d2f05fe17237" },
+    { name: "Radio Felicidad Uyuni", country: "Bolivien", url: "https://streaming5.locucionar.com/proxy/felicidaduyuni?mp=/stream" },
+    { name: "BR Heimat", country: "Deutschland", url: "https://br-radio.ard-mcdn.de/br/radio/brheimat/hls/master.m3u8" },
+    { name: "Klassik Radio", country: "Deutschland", url: "https://stream.klassikradio.de/national/mp3-192/" },
+    { name: "ORF Radio Salzburg", country: "Österreich", url: "https://orf-live.ors-shoutcast.at/sbg-q2a" },
+    { name: "Bayern 2", country: "Deutschland", url: "https://dispatcher.rndfnk.com/br/br2/live/mp3/mid" },
+    { name: "Radio PIO XII Cochabamba", country: "Bolivien", url: "https://aler.org:8445/pio12cbba.mp3" },
+    { name: "Radio Arabella München", country: "Deutschland", url: "https://live.stream.radioarabella.de/radioarabella-muenchen/stream/mp3" },
+    { name: "Absolut Relax", country: "Deutschland", url: "https://absolut-relax.live-sm.absolutradio.de/absolut-relax/stream/mp3" }
+  ];
+
+  const player = document.getElementById('player');
+  const stationsEl = document.getElementById('stations');
+  const nowPlaying = document.getElementById('nowPlaying');
+  const dial = document.getElementById('dial');
+  const stopBtn = document.getElementById('stopBtn');
+
+  let activeBtn = null;
+
+  stations.forEach(station => {
+    const btn = document.createElement('button');
+    btn.className = 'station';
+    btn.innerHTML = `<span class="country">${station.country}</span><span>${station.name}</span>`;
+    btn.addEventListener('click', () => play(station, btn));
+    stationsEl.appendChild(btn);
+  });
+
+  function play(station, btn){
+    player.pause();
+    player.src = station.url;
+    player.load();
+    player.play().catch(() => {
+      nowPlaying.innerHTML = `<span class="off">Wiedergabe fehlgeschlagen: ${station.name}</span>`;
+      dial.classList.remove('live');
+    });
+
+    if (activeBtn) activeBtn.classList.remove('active');
+    btn.classList.add('active');
+    activeBtn = btn;
+
+    nowPlaying.textContent = `▸ ${station.name}`;
+    dial.classList.add('live');
+  }
+
+  stopBtn.addEventListener('click', () => {
+    player.pause();
+    player.removeAttribute('src');
+    player.load();
+
+    if (activeBtn) activeBtn.classList.remove('active');
+    activeBtn = null;
+
+    nowPlaying.innerHTML = '<span class="off">Kein Sender aktiv</span>';
+    dial.classList.remove('live');
+  });
+</script>
+
+</body>
+</html>
