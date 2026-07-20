@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Webradio (ohne JavaScript)</title>
+<title>Radio Walter</title>
 <style type="text/css">
   body {
     margin: 0;
@@ -32,6 +32,15 @@
     text-transform: uppercase;
     margin: 0 0 6px 0;
   }
+  #nowPlaying {
+    font-family: "Courier New", monospace;
+    font-size: 26px;
+    color: #d98f2b;
+    margin: 0 0 20px 0;
+  }
+  #nowPlaying.off {
+    color: #a89a80;
+  }
   table.panel {
     background-color: #241f19;
     border: 1px solid #3a332a;
@@ -50,21 +59,26 @@
     width: 50%;
     vertical-align: top;
   }
-  a.stationBtn {
+  .stationBtn {
     display: block;
     width: 100%;
     background-color: #2c261d;
     border: 1px solid #4a4136;
     color: #f2ead9;
     font-family: Georgia, serif;
-    text-decoration: none;
+    font-size: 15px;
     padding: 14px 10px;
+    cursor: pointer;
     text-align: left;
     overflow: hidden;
   }
-  a.stationBtn:hover {
+  .stationBtn:hover {
     border-color: #d98f2b;
     background-color: #332b1f;
+  }
+  .stationBtn.active {
+    border-color: #f2ac45;
+    background-color: #3a2f1c;
   }
   .stationNum {
     float: left;
@@ -77,26 +91,16 @@
     text-align: center;
     margin-right: 12px;
   }
+  .stationBtn.active .stationNum {
+    color: #f2ac45;
+  }
   .stationText {
     display: block;
     overflow: hidden;
     font-size: 34px;
     line-height: 1.05;
   }
-  .playerBox {
-    margin-top: 6px;
-    border: 1px solid #4a4136;
-    background-color: #14110d;
-    padding: 8px;
-  }
-  .playerBox iframe {
-    display: block;
-    width: 100%;
-    height: 54px;
-    border: none;
-    background-color: #14110d;
-  }
-  a.stopBtn {
+  .stopBtn {
     display: block;
     width: 100%;
     background-color: #b3413a;
@@ -106,12 +110,11 @@
     font-size: 15px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    text-decoration: none;
     padding: 14px 10px;
-    margin-top: 6px;
-    text-align: center;
+    cursor: pointer;
+    margin-bottom: 8px;
   }
-  a.stopBtn:hover {
+  .stopBtn:hover {
     background-color: #d15248;
   }
   .footNote {
@@ -120,6 +123,7 @@
     max-width: 500px;
     margin: 20px auto 0 auto;
   }
+  /* Stack station buttons on very small screens */
   @media (max-width: 480px) {
     table.stations, table.stations tbody, table.stations tr, table.stations td {
       display: block;
@@ -133,52 +137,126 @@
 </head>
 <body>
 
-<p class="eyebrow">On Air</p>
-<h1>Webradio</h1>
-<p class="sub">Einen Sender antippen zum Starten &mdash; keine Skripte, nur HTML/CSS</p>
+<h1>Radio Walter</h1>
+
+<div id="nowPlaying" class="off">Kein Sender aktiv</div>
 
 <table class="panel" cellpadding="0" cellspacing="0" align="center">
 <tr><td>
 
+  <button type="button" class="stopBtn" id="stopBtn" onclick="stopStation()">Stopp</button>
+
   <table class="stations" cellpadding="0" cellspacing="0">
     <tr>
-      <td><a class="stationBtn" href="https://emiteradio.com/proxy/uyuni2?mp=/stream?n=3f5b38c8d2f05fe17237" target="player"><span class="stationNum">1</span><span class="stationText">Recuerdos de Uyuni</span></a></td>
-      <td><a class="stationBtn" href="https://streaming5.locucionar.com/proxy/felicidaduyuni?mp=/stream" target="player"><span class="stationNum">2</span><span class="stationText">Felicidad Uyuni</span></a></td>
+      <td><button type="button" class="stationBtn" id="btn0" onclick="playStation(0)"><span class="stationNum">1</span><span class="stationText">Recuerdos de Uyuni</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn1" onclick="playStation(1)"><span class="stationNum">2</span><span class="stationText">Felicidad Uyuni</span></button></td>
     </tr>
     <tr>
-      <td><a class="stationBtn" href="https://br-radio.ard-mcdn.de/br/radio/brheimat/hls/master.m3u8" target="player"><span class="stationNum">3</span><span class="stationText">BR Heimat</span></a></td>
-      <td><a class="stationBtn" href="https://stream.klassikradio.de/national/mp3-192/" target="player"><span class="stationNum">4</span><span class="stationText">Klassik</span></a></td>
+      <td><button type="button" class="stationBtn" id="btn2" onclick="playStation(2)"><span class="stationNum">3</span><span class="stationText">BR Heimat</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn3" onclick="playStation(3)"><span class="stationNum">4</span><span class="stationText">Klassik</span></button></td>
     </tr>
     <tr>
-      <td><a class="stationBtn" href="https://orf-live.ors-shoutcast.at/sbg-q2a" target="player"><span class="stationNum">5</span><span class="stationText">ORF Salzburg</span></a></td>
-      <td><a class="stationBtn" href="https://dispatcher.rndfnk.com/br/br2/live/mp3/mid" target="player"><span class="stationNum">6</span><span class="stationText">Bayern 2</span></a></td>
+      <td><button type="button" class="stationBtn" id="btn4" onclick="playStation(4)"><span class="stationNum">5</span><span class="stationText">ORF Salzburg</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn5" onclick="playStation(5)"><span class="stationNum">6</span><span class="stationText">Bayern 2</span></button></td>
     </tr>
     <tr>
-      <td><a class="stationBtn" href="https://aler.org:8445/pio12cbba.mp3" target="player"><span class="stationNum">7</span><span class="stationText">PIO XII Cochabamba</span></a></td>
-      <td><a class="stationBtn" href="https://live.stream.radioarabella.de/radioarabella-muenchen/stream/mp3" target="player"><span class="stationNum">8</span><span class="stationText">Arabella Muenchen</span></a></td>
+      <td><button type="button" class="stationBtn" id="btn6" onclick="playStation(6)"><span class="stationNum">7</span><span class="stationText">PIO XII Cochabamba</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn7" onclick="playStation(7)"><span class="stationNum">8</span><span class="stationText">Arabella Muenchen</span></button></td>
     </tr>
     <tr>
-      <td><a class="stationBtn" href="https://absolut-relax.live-sm.absolutradio.de/absolut-relax/stream/mp3" target="player"><span class="stationNum">9</span><span class="stationText">Absolut Relax</span></a></td>
+      <td><button type="button" class="stationBtn" id="btn8" onclick="playStation(8)"><span class="stationNum">9</span><span class="stationText">Absolut Relax</span></button></td>
       <td>&nbsp;</td>
     </tr>
   </table>
 
-  <div class="playerBox">
-    <iframe name="player" title="Player" src="about:blank"></iframe>
-  </div>
-
-  <a class="stopBtn" href="about:blank" target="player">Stopp</a>
-
 </td></tr>
 </table>
 
-<p class="footNote">
-  Diese Version verwendet kein JavaScript. Jeder Sender-Button laedt den Stream direkt in
-  einen eingebetteten Rahmen (iframe), in dem der Browser seinen eigenen, nativen Audio-Player
-  anzeigt (Play/Pause/Lautstaerke). Der Stopp-Button leert diesen Rahmen wieder. Hinweis:
-  "BR Heimat" ist ein HLS-Stream (.m3u8); dieser spielt nativ in Safari, in anderen Browsern
-  ohne HLS-Unterstuetzung eventuell nicht.
-</p>
+<audio id="player" preload="none"></audio>
+
+<script type="text/javascript">
+  var stationNames = [
+    "Recuerdos de Uyuni",
+    "Felicidad Uyuni",
+    "BR Heimat",
+    "Klassik",
+    "ORF Salzburg",
+    "Bayern 2",
+    "PIO XII Cochabamba",
+    "Arabella Muenchen",
+    "Absolut Relax"
+  ];
+
+  var stationUrls = [
+    "https://emiteradio.com/proxy/uyuni2?mp=/stream?n=3f5b38c8d2f05fe17237",
+    "https://streaming5.locucionar.com/proxy/felicidaduyuni?mp=/stream",
+    "https://br-radio.ard-mcdn.de/br/radio/brheimat/hls/master.m3u8",
+    "https://stream.klassikradio.de/national/mp3-192/",
+    "https://orf-live.ors-shoutcast.at/sbg-q2a",
+    "https://dispatcher.rndfnk.com/br/br2/live/mp3/mid",
+    "https://aler.org:8445/pio12cbba.mp3",
+    "https://live.stream.radioarabella.de/radioarabella-muenchen/stream/mp3",
+    "https://absolut-relax.live-sm.absolutradio.de/absolut-relax/stream/mp3"
+  ];
+
+  var activeIndex = -1;
+
+  function setActiveButton(index) {
+    var i;
+    for (i = 0; i < stationNames.length; i++) {
+      var btn = document.getElementById("btn" + i);
+      if (btn) {
+        btn.className = (i === index) ? "stationBtn active" : "stationBtn";
+      }
+    }
+  }
+
+  function setNowPlaying(text, isOff) {
+    var el = document.getElementById("nowPlaying");
+    el.innerHTML = "";
+    el.appendChild(document.createTextNode(text));
+    el.className = isOff ? "off" : "";
+  }
+
+  function playStation(index) {
+    var player = document.getElementById("player");
+    var url = stationUrls[index];
+    var name = stationNames[index];
+
+    player.pause();
+    player.setAttribute("src", url);
+    player.load();
+
+    try {
+      var p = player.play();
+      if (p && typeof p.then === "function") {
+        p.then(function () {
+          /* playback started fine */
+        }, function () {
+          setNowPlaying("Wiedergabe fehlgeschlagen: " + name, true);
+        });
+      }
+    } catch (e) {
+      setNowPlaying("Wiedergabe fehlgeschlagen: " + name, true);
+      return;
+    }
+
+    activeIndex = index;
+    setActiveButton(index);
+    setNowPlaying(name, false);
+  }
+
+  function stopStation() {
+    var player = document.getElementById("player");
+    player.pause();
+    player.removeAttribute("src");
+    player.load();
+
+    activeIndex = -1;
+    setActiveButton(-1);
+    setNowPlaying("Kein Sender aktiv", true);
+  }
+</script>
 
 </body>
 </html>
