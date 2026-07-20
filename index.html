@@ -7,15 +7,25 @@
 <style type="text/css">
   body {
     margin: 0;
-    padding: 20px;
+    padding: 0;
     background-color: #1b1712;
     color: #f2ead9;
     font-family: Georgia, "Times New Roman", serif;
     text-align: center;
   }
+  table.stage {
+    width: 1024px;
+    height: 768px;
+    margin: 0 auto;
+    border-collapse: collapse;
+  }
+  table.stage td {
+    text-align: center;
+    vertical-align: middle;
+  }
   h1 {
-    font-size: 28px;
-    margin: 0 0 4px 0;
+    font-size: 34px;
+    margin: 0 0 8px 0;
     font-weight: normal;
     color: #f2ead9;
   }
@@ -34,9 +44,9 @@
   }
   #nowPlaying {
     font-family: "Courier New", monospace;
-    font-size: 26px;
+    font-size: 30px;
     color: #d98f2b;
-    margin: 0 0 20px 0;
+    margin: 0 0 22px 0;
   }
   #nowPlaying.off {
     color: #a89a80;
@@ -46,17 +56,16 @@
     border: 1px solid #3a332a;
     border-collapse: collapse;
     margin: 0 auto;
-    width: 100%;
-    max-width: 640px;
-    padding: 10px;
+    width: 860px;
+    padding: 16px;
   }
   table.stations {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 8px;
+    border-spacing: 10px;
   }
   table.stations td {
-    width: 50%;
+    width: 33.33%;
     vertical-align: top;
   }
   .stationBtn {
@@ -67,7 +76,7 @@
     color: #f2ead9;
     font-family: Georgia, serif;
     font-size: 15px;
-    padding: 14px 10px;
+    padding: 18px 12px;
     cursor: pointer;
     text-align: left;
     overflow: hidden;
@@ -83,10 +92,10 @@
   .stationNum {
     float: left;
     font-family: "Courier New", monospace;
-    font-size: 34px;
+    font-size: 38px;
     font-weight: bold;
     color: #d98f2b;
-    width: 44px;
+    width: 48px;
     line-height: 1;
     text-align: center;
     margin-right: 12px;
@@ -97,8 +106,8 @@
   .stationText {
     display: block;
     overflow: hidden;
-    font-size: 34px;
-    line-height: 1.05;
+    font-size: 28px;
+    line-height: 1.1;
   }
   .stopBtn {
     display: block;
@@ -107,15 +116,22 @@
     border: 1px solid #b3413a;
     color: #fff2ee;
     font-family: "Courier New", monospace;
-    font-size: 15px;
+    font-size: 18px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    padding: 14px 10px;
+    padding: 18px 12px;
     cursor: pointer;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
   }
   .stopBtn:hover {
     background-color: #d15248;
+  }
+  .stopBtn.playMode {
+    background-color: #3f8f4f;
+    border: 1px solid #3f8f4f;
+  }
+  .stopBtn.playMode:hover {
+    background-color: #4ea862;
   }
   .footNote {
     color: #a89a80;
@@ -125,6 +141,13 @@
   }
   /* Stack station buttons on very small screens */
   @media (max-width: 480px) {
+    table.stage {
+      width: 100%;
+      height: auto;
+    }
+    table.panel {
+      width: 100%;
+    }
     table.stations, table.stations tbody, table.stations tr, table.stations td {
       display: block;
       width: 100% !important;
@@ -137,6 +160,9 @@
 </head>
 <body>
 
+<table class="stage" cellpadding="0" cellspacing="0">
+<tr><td>
+
 <h1>Radio Walter</h1>
 
 <div id="nowPlaying" class="off">Kein Sender aktiv</div>
@@ -144,30 +170,28 @@
 <table class="panel" cellpadding="0" cellspacing="0" align="center">
 <tr><td>
 
-  <button type="button" class="stopBtn" id="stopBtn" onclick="stopStation()">Stopp</button>
+  <button type="button" class="stopBtn playMode" id="stopBtn" onclick="toggleStopPlay()">Play</button>
 
   <table class="stations" cellpadding="0" cellspacing="0">
     <tr>
       <td><button type="button" class="stationBtn" id="btn0" onclick="playStation(0)"><span class="stationNum">1</span><span class="stationText">Recuerdos de Uyuni</span></button></td>
       <td><button type="button" class="stationBtn" id="btn1" onclick="playStation(1)"><span class="stationNum">2</span><span class="stationText">Felicidad Uyuni</span></button></td>
-    </tr>
-    <tr>
       <td><button type="button" class="stationBtn" id="btn2" onclick="playStation(2)"><span class="stationNum">3</span><span class="stationText">BR Heimat</span></button></td>
-      <td><button type="button" class="stationBtn" id="btn3" onclick="playStation(3)"><span class="stationNum">4</span><span class="stationText">Klassik</span></button></td>
     </tr>
     <tr>
+      <td><button type="button" class="stationBtn" id="btn3" onclick="playStation(3)"><span class="stationNum">4</span><span class="stationText">Klassik</span></button></td>
       <td><button type="button" class="stationBtn" id="btn4" onclick="playStation(4)"><span class="stationNum">5</span><span class="stationText">ORF Salzburg</span></button></td>
       <td><button type="button" class="stationBtn" id="btn5" onclick="playStation(5)"><span class="stationNum">6</span><span class="stationText">Bayern 2</span></button></td>
     </tr>
     <tr>
       <td><button type="button" class="stationBtn" id="btn6" onclick="playStation(6)"><span class="stationNum">7</span><span class="stationText">PIO XII Cochabamba</span></button></td>
       <td><button type="button" class="stationBtn" id="btn7" onclick="playStation(7)"><span class="stationNum">8</span><span class="stationText">Arabella Muenchen</span></button></td>
-    </tr>
-    <tr>
       <td><button type="button" class="stationBtn" id="btn8" onclick="playStation(8)"><span class="stationNum">9</span><span class="stationText">Absolut Relax</span></button></td>
-      <td>&nbsp;</td>
     </tr>
   </table>
+
+</td></tr>
+</table>
 
 </td></tr>
 </table>
@@ -200,6 +224,7 @@
   ];
 
   var activeIndex = -1;
+  var lastPlayedIndex = 0;
 
   function setActiveButton(index) {
     var i;
@@ -216,6 +241,21 @@
     el.innerHTML = "";
     el.appendChild(document.createTextNode(text));
     el.className = isOff ? "off" : "";
+  }
+
+  function setStopBtnLabel(text, isPlayMode) {
+    var btn = document.getElementById("stopBtn");
+    btn.innerHTML = "";
+    btn.appendChild(document.createTextNode(text));
+    btn.className = isPlayMode ? "stopBtn playMode" : "stopBtn";
+  }
+
+  function toggleStopPlay() {
+    if (activeIndex === -1) {
+      playStation(lastPlayedIndex);
+    } else {
+      stopStation();
+    }
   }
 
   function playStation(index) {
@@ -242,8 +282,10 @@
     }
 
     activeIndex = index;
+    lastPlayedIndex = index;
     setActiveButton(index);
     setNowPlaying(name, false);
+    setStopBtnLabel("Stopp", false);
   }
 
   function stopStation() {
@@ -255,6 +297,7 @@
     activeIndex = -1;
     setActiveButton(-1);
     setNowPlaying("Kein Sender aktiv", true);
+    setStopBtnLabel("Play", true);
   }
 </script>
 
