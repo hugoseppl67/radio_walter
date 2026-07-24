@@ -11,8 +11,8 @@
   body {
     margin: 0;
     padding: 0;
-    background-color: #000000;
-    color: #ffffff;
+    background-color: #ffffff;
+    color: #000000;
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
   }
@@ -26,23 +26,37 @@
     text-align: center;
     vertical-align: middle;
   }
-  h1 {
-    font-size: 48px;
-    font-weight: bold;
-    margin: 0 0 12px 0;
-    color: #ffffff;
-    letter-spacing: 1px;
+  #dial {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background-color: #444444;
+    border: 3px solid #000000;
+    margin: 0 auto 18px auto;
+  }
+  #dial.live {
+    background-color: #ff7a00;
+    -webkit-animation: blink 1.2s ease-in-out infinite;
+    animation: blink 1.2s ease-in-out infinite;
+  }
+  @-webkit-keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
   }
   #nowPlaying {
     font-size: 32px;
     font-weight: bold;
-    color: #ffe600;
+    color: #cc5200;
     margin: 0 0 20px 0;
     letter-spacing: 0.5px;
     min-height: 40px;
   }
   #nowPlaying.off {
-    color: #ffffff;
+    color: #000000;
   }
   table.panel {
     margin: 0 auto;
@@ -68,7 +82,7 @@
     background-color: #007a1f;
   }
   .stopBtn:focus {
-    outline: 5px solid #ffe600;
+    outline: 5px solid #cc5200;
     outline-offset: 3px;
   }
   table.stations {
@@ -85,28 +99,28 @@
     display: table;
     width: 100%;
     height: 168px;
-    background-color: #000000;
-    border: 4px solid #ffffff;
-    color: #ffffff;
+    background-color: #ffffff;
+    border: 4px solid #000000;
+    color: #000000;
     font-family: Arial, Helvetica, sans-serif;
     padding: 12px 16px;
     cursor: pointer;
     text-align: left;
   }
   .stationBtn:focus {
-    outline: 5px solid #ffe600;
+    outline: 5px solid #cc5200;
     outline-offset: 3px;
   }
   .stationBtn.active {
-    background-color: #ffe600;
-    border-color: #ffe600;
+    background-color: #ff7a00;
+    border-color: #ff7a00;
   }
   .stationNum {
     display: table-cell;
     vertical-align: middle;
     font-size: 48px;
     font-weight: bold;
-    color: #ffe600;
+    color: #cc5200;
     width: 70px;
     line-height: 1;
     text-align: center;
@@ -157,7 +171,7 @@
 <table class="stage" cellpadding="0" cellspacing="0">
 <tr><td>
 
-<h1>Radio Walter</h1>
+<div id="dial"></div>
 
 <div id="nowPlaying" class="off">Kein Sender aktiv</div>
 
@@ -280,6 +294,7 @@
     setActiveButton(index);
     setNowPlaying(name, false);
     setStopBtnLabel("Stopp", false);
+    document.getElementById("dial").className = "live";
   }
 
   function stopStation() {
@@ -292,6 +307,7 @@
     setActiveButton(-1);
     setNowPlaying("Kein Sender aktiv", true);
     setStopBtnLabel("Play", true);
+    document.getElementById("dial").className = "";
   }
 </script>
 
