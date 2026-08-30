@@ -198,7 +198,7 @@
 <tr><td>
 
 <div class="nowPlayingWrap">
-<div id="nowPlaying" class="off">Kein Sender aktiv</div>
+<div id="nowPlaying" class="off">Radio Walter</div>
 </div>
 
 <table class="panel" cellpadding="0" cellspacing="0" align="center">
@@ -216,7 +216,7 @@
       <td><button type="button" class="stationBtn" id="btn5" onclick="playStation(5)"><span class="stationNum">6</span><span class="stationText">Bayern 2</span></button></td>
     </tr>
     <tr>
-      <td><button type="button" class="stationBtn" id="btn6" onclick="playStation(6)"><span class="stationNum">7</span><span class="stationText">Folklore Bolivia</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn6" onclick="playStation(6)"><span class="stationNum">7</span><span class="stationText">PIO XII Cochabamba</span></button></td>
       <td><button type="button" class="stationBtn" id="btn7" onclick="playStation(7)"><span class="stationNum">8</span><span class="stationText">Arabella Muenchen</span></button></td>
       <td><button type="button" class="stationBtn" id="btn8" onclick="playStation(8)"><span class="stationNum">9</span><span class="stationText">Absolut Relax</span></button></td>
     </tr>
@@ -242,7 +242,7 @@
     "Klassik",
     "ORF Salzburg",
     "Bayern 2",
-    "Folklore Bolivia",
+    "PIO XII Cochabamba",
     "Arabella Muenchen",
     "Absolut Relax"
   ];
@@ -254,7 +254,7 @@
     "https://stream.klassikradio.de/national/mp3-192/",
     "https://orf-live.ors-shoutcast.at/sbg-q2a",
     "https://dispatcher.rndfnk.com/br/br2/live/mp3/mid",
-    "http://stream.zeno.fm/zsbf9w2yzf8uv",
+    "https://aler.org:8445/pio12cbba.mp3",
     "https://live.stream.radioarabella.de/radioarabella-muenchen/stream/mp3",
     "https://absolut-relax.live-sm.absolutradio.de/absolut-relax/stream/mp3"
   ];
@@ -332,7 +332,7 @@
 
     activeIndex = -1;
     setActiveButton(-1);
-    setNowPlaying("Kein Sender aktiv", true);
+    setNowPlaying("Radio Walter", true);
     setStopBtnLabel("Play", true);
   }
 </script>
