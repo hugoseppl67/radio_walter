@@ -11,7 +11,7 @@
   body {
     margin: 0;
     padding: 0;
-    background-color: #2b3b4b;
+    background-color: #2b2b2b;
     color: #ffffff;
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
@@ -206,19 +206,19 @@
 
   <table class="stations" cellpadding="0" cellspacing="0">
     <tr>
-      <td><button type="button" class="stationBtn" id="btn0" onclick="playStation(0)"><span class="stationNum">1</span><span class="stationText">Recuerdos de Uyuni</span></button></td>
-      <td><button type="button" class="stationBtn" id="btn1" onclick="playStation(1)"><span class="stationNum">2</span><span class="stationText">Felicidad Uyuni</span></button></td>
-      <td><button type="button" class="stationBtn" id="btn2" onclick="playStation(2)"><span class="stationNum">3</span><span class="stationText">BR Heimat</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn0" onclick="handleStationClick(0)"><span class="stationNum">1</span><span class="stationText">Recuerdos de Uyuni</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn1" onclick="handleStationClick(1)"><span class="stationNum">2</span><span class="stationText">Felicidad Uyuni</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn2" onclick="handleStationClick(2)"><span class="stationNum">3</span><span class="stationText">BR Heimat</span></button></td>
     </tr>
     <tr>
-      <td><button type="button" class="stationBtn" id="btn3" onclick="playStation(3)"><span class="stationNum">4</span><span class="stationText">Klassik</span></button></td>
-      <td><button type="button" class="stationBtn" id="btn4" onclick="playStation(4)"><span class="stationNum">5</span><span class="stationText">ORF Salzburg</span></button></td>
-      <td><button type="button" class="stationBtn" id="btn5" onclick="playStation(5)"><span class="stationNum">6</span><span class="stationText">Bayern 2</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn3" onclick="handleStationClick(3)"><span class="stationNum">4</span><span class="stationText">Klassik</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn4" onclick="handleStationClick(4)"><span class="stationNum">5</span><span class="stationText">ORF Salzburg</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn5" onclick="handleStationClick(5)"><span class="stationNum">6</span><span class="stationText">Bayern 2</span></button></td>
     </tr>
     <tr>
-      <td><button type="button" class="stationBtn" id="btn6" onclick="playStation(6)"><span class="stationNum">7</span><span class="stationText">PIO XII Cochabamba</span></button></td>
-      <td><button type="button" class="stationBtn" id="btn7" onclick="playStation(7)"><span class="stationNum">8</span><span class="stationText">Arabella Muenchen</span></button></td>
-      <td><button type="button" class="stationBtn" id="btn8" onclick="playStation(8)"><span class="stationNum">9</span><span class="stationText">Absolut Relax</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn6" onclick="handleStationClick(6)"><span class="stationNum">7</span><span class="stationText">PIO XII Cochabamba</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn7" onclick="handleStationClick(7)"><span class="stationNum">8</span><span class="stationText">Arabella Muenchen</span></button></td>
+      <td><button type="button" class="stationBtn" id="btn8" onclick="handleStationClick(8)"><span class="stationNum">9</span><span class="stationText">Absolut Relax</span></button></td>
     </tr>
   </table>
 
@@ -291,6 +291,14 @@
       playStation(lastPlayedIndex);
     } else {
       stopStation();
+    }
+  }
+
+  function handleStationClick(index) {
+    if (activeIndex === index) {
+      stopStation();
+    } else {
+      playStation(index);
     }
   }
 
